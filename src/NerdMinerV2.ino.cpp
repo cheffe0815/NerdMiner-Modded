@@ -11,6 +11,7 @@
 #include "wManager.h"
 #include "webConfig.h"
 #include "mqttPublisher.h"
+#include "mailNotifier.h"
 #include "mining.h"
 #include "monitor.h"
 #include "drivers/displays/display.h"
@@ -341,6 +342,7 @@ void loop() {
   wifiManagerProcess(); // avoid delays() in loop when non-blocking and other long running code
   webConfigProcess();
   mqttProcess();
+  mailProcess();
 
   vTaskDelay(50 / portTICK_PERIOD_MS);
 }

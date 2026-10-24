@@ -10,6 +10,7 @@
 #include "mining.h"
 #include "utils.h"
 #include "monitor.h"
+#include "pauseDiagnostics.h"
 #include "wManager.h"
 #include "drivers/storage/storage.h"
 #include "drivers/devices/device.h"
@@ -124,7 +125,7 @@ void updateGlobalData(void){
         try {
         http.begin(getGlobalHash);
         int httpCode;
-        { HW_SHA_REQUEST(); std::lock_guard<std::mutex> shaLock(g_hwShaMutex); httpCode = http.GET(); }
+        httpCode = measuredBackgroundGet(http, BackgroundFetch::Network);
 
         if (httpCode == HTTP_CODE_OK) {
             String payload = http.getString();
@@ -149,7 +150,7 @@ void updateGlobalData(void){
       
         //Make third API call to get fees
         http.begin(getFees);
-        { HW_SHA_REQUEST(); std::lock_guard<std::mutex> shaLock(g_hwShaMutex); httpCode = http.GET(); }
+        httpCode = measuredBackgroundGet(http, BackgroundFetch::Fees);
 
         if (httpCode == HTTP_CODE_OK) {
             String payload = http.getString();
@@ -189,7 +190,7 @@ String getBlockHeight(void){
         try {
         http.begin(getHeightAPI);
         int httpCode;
-        { HW_SHA_REQUEST(); std::lock_guard<std::mutex> shaLock(g_hwShaMutex); httpCode = http.GET(); }
+        httpCode = measuredBackgroundGet(http, BackgroundFetch::Height);
 
         if (httpCode == HTTP_CODE_OK) {
             String payload = http.getString();
@@ -224,7 +225,7 @@ String getBTCprice(void){
         try {
         http.begin(String(getBTCAPI) + cur.code);
         int httpCode;
-        { HW_SHA_REQUEST(); std::lock_guard<std::mutex> shaLock(g_hwShaMutex); httpCode = http.GET(); }
+        httpCode = measuredBackgroundGet(http, BackgroundFetch::Price);
 
         if (httpCode == HTTP_CODE_OK) {
             String payload = http.getString();
@@ -808,12 +809,7 @@ pool_data getPoolData(void){
           // showing abort() inside sha_hal_read_digest() when both ran
           // concurrently. g_hwShaMutex closes that gap; see mining.h.
           int httpCode;
-          {
-            HW_SHA_REQUEST();
-            g_hwShaMutex.lock();
-            httpCode = http.GET();
-            g_hwShaMutex.unlock();
-          }
+          httpCode = measuredBackgroundGet(http, BackgroundFetch::Pool);
           if (httpCode == HTTP_CODE_OK) {
               String payload = http.getString();
               // Serial.println(payload);
