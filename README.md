@@ -15,6 +15,7 @@ Original NerdMiner_v2 project https://github.com/BitMaker-hub/NerdMiner_v2
 
 Proposed additions in this contribution: [hashrate history, optional Gmail reports,
 diagnostics and classic ESP32 SHA coordination](docs/dashboard-mail-and-sha.md).
+RAM follow-up: [bounded measurements, HTTP allocation pressure and mail-task cleanup](docs/memory-diagnostics.md).
 
 ![NerdMiner Modded running on a CYD](images/nerdminer-mod.gif)
 
