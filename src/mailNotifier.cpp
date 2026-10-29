@@ -1,5 +1,6 @@
 #include "mailNotifier.h"
 #include "mailPolicy.h"
+#include "memoryDiagnostics.h"
 #include "gmailRoots.h"
 #include "mining.h"
 #include "monitor.h"
@@ -139,6 +140,7 @@ String networkDetails() {
 }
 
 int deliver(const Job &j) {
+  MemoryProbe memory(MemoryPoint::MailBegin, MemoryPoint::MailEnd);
   timeval tv{j.utc,0};settimeofday(&tv,nullptr); // valid UTC required by certificate checks
   transportDiagnostic[0]=0;
   markPhase(Resolving);
@@ -230,6 +232,7 @@ const char *failure(int r) {
 void complete(uint64_t now) {
   const int r=result.exchange(0);if(!r)return;
   busy=false;Event &e=events[currentJob];
+  scheduleMemoryMailSettled();
   if(r==1) {
     status="Von Gmail angenommen (Zustellung nicht bestaetigt)";
     if(e.kind==Daily) {
