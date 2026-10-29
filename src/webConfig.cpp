@@ -14,6 +14,7 @@
 #include "mqttPublisher.h"
 #include "mailNotifier.h"
 #include "mailPolicy.h"
+#include "memoryDiagnostics.h"
 #include "drivers/devices/device.h"
 #include "drivers/displays/display.h"
 #include "drivers/storage/storage.h"
@@ -728,6 +729,10 @@ void setup_webConfig(void)
   webCfgServer.on("/api/rate-diagnostics", HTTP_GET, []() {
     webCfgServer.sendHeader("Cache-Control", "no-store");
     webCfgServer.send(200, "application/json", rateDiagnosticsJson());
+  });
+  webCfgServer.on("/api/memory-diagnostics", HTTP_GET, []() {
+    webCfgServer.sendHeader("Cache-Control", "no-store");
+    webCfgServer.send(200, "application/json", memoryDiagnosticsJson());
   });
   webCfgServer.on("/api/pauses", HTTP_GET, []() {
     webCfgServer.sendHeader("Cache-Control", "no-store");
