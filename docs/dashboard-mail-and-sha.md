@@ -131,3 +131,7 @@ requires a separate end-to-end daily-schedule check.
 
 The exact port to current upstream has been build-tested on the dual-USB CYD
 environment only. Other boards and long-term operation have not been validated.
+
+## Follow-up: RAM pressure and mail-worker cleanup
+
+See [RAM diagnostics and mail-task cleanup](memory-diagnostics.md) for bounded heap measurements, streaming HTTP parsing, the software-miner IDLE scheduling fix and hardware-test limits.
