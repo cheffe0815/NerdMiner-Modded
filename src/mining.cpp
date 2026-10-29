@@ -1163,6 +1163,10 @@ void minerWorkerSw(void * task_id)
     {
       wdt_counter = 0;
       esp_task_wdt_reset();
+      // IDLE reclaims stacks/TCBs of self-deleted tasks (Gmail: 12 KiB).
+      // taskYIELD() cannot schedule a lower priority. Briefly block the
+      // always-ready SW miner, outside all mining/shared locks.
+      vTaskDelay(1);
     }
   }
 }
