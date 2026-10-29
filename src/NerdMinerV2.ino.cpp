@@ -12,6 +12,7 @@
 #include "webConfig.h"
 #include "mqttPublisher.h"
 #include "mailNotifier.h"
+#include "memoryDiagnostics.h"
 #include "mining.h"
 #include "monitor.h"
 #include "drivers/displays/display.h"
@@ -343,6 +344,7 @@ void loop() {
   webConfigProcess();
   mqttProcess();
   mailProcess();
+  memoryDiagnosticsTick();
 
   vTaskDelay(50 / portTICK_PERIOD_MS);
 }
